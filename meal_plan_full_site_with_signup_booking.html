@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Meal Planning</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f9fa; }
+    header, main, footer { padding: 20px; max-width: 800px; margin: auto; }
+    .section { margin-bottom: 40px; }
+    h1, h2 { color: #2c3e50; }
+    .btn { padding: 10px 20px; background: #27ae60; color: #fff; border: none; cursor: pointer; }
+    .btn:hover { background: #219150; }
+    input, select { padding: 8px; width: 100%; margin-top: 5px; margin-bottom: 20px; }
+    .plan-box { background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .alert { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <main id="login" class="section">
+    <h2>Login to Access Meal Plans</h2>
+    <label>Email: <input type="email" id="email" /></label>
+    <label>Password: <input type="password" id="password" /></label>
+    <button class="btn" onclick="validateLogin()">Login</button>
+    <p id="login-message" style="color:red;"></p>
+  
+  </main>
+
+  <main id="signup" class="section" style="display:none;">
+    <h2>Create a New Account</h2>
+    <label>Email: <input type="email" id="signup-email" /></label>
+    <label>Password: <input type="password" id="signup-password" /></label>
+    <button class="btn" onclick="completeSignup()">Sign Up</button>
+    <p id="signup-message" style="color:green;"></p>
+  </main>
+
+  <main id="booking" class="section" style="display:none;">
+    <h2>Book a Meal Plan Consultation</h2>
+    <p>Send your request to: <strong>mboniface833@gmail.com</strong></p>
+    <label>Your Name: <input type="text" id="book-name" /></label>
+    <label>Preferred Date & Time: <input type="datetime-local" id="book-time" /></label>
+    <button class="btn" onclick="submitBooking()">Book Now</button>
+    <p id="booking-message" style="color:green;"></p>
+  </main>
+
+  <header id="home" class="section" style="display:none;">
+    <h1>Smart Meal Planning for Healthier Living</h1>
+    <p>Custom meal plans for common conditions like Diabetes, Hypertension, Ulcers, Arthritis, Kidney Disease, Heart Disease, Obesity, Cancer Support, Anaemia and HIV.</p>
+    <button class="btn" onclick="goToPayment()">Pay KES 1500 to Access Quiz</button>
+  </header>
+
+  <main id="payment" class="section" style="display:none;">
+    <h2>Make Payment</h2>
+    <p>To access the quiz and your custom meal plan, please pay KES 1500.</p>
+    <p><strong>Mock Payment:</strong> Click the button below to simulate payment.</p>
+    <button class="btn" onclick="completePayment()">Simulate Payment</button>
+  </main>
+
+  <main id="quiz" class="section" style="display:none;">
+    <h2>Tell Us What You Eat Most Often</h2>
+    <label>How often do you consume processed foods?
+      <select id="processed">
+        <option>Rarely</option>
+        <option>Sometimes</option>
+        <option>Often</option>
+      </select>
+    </label>
+    <label>What foods do you consume most often?
+      <input type="text" id="food-input" placeholder="e.g., ugali, mandazi, soda" />
+    </label>
+    <label>Any existing medical condition?
+      <select id="condition">
+        <option>Diabetes</option>
+        <option>Hypertension</option>
+        <option>Ulcers</option>
+        <option>Arthritis</option>
+        <option>Kidney Disease</option>
+        <option>Heart Disease</option>
+        <option>Obesity</option>
+        <option>Cancer Support</option>
+        <option>Anaemia</option>
+        <option>HIV</option>
+      </select>
+    </label>
+    <label>What foods do you consume most often?
+      <input type="text" id="food-input" placeholder="e.g., ugali, mandazi, soda" />
+    </label>
+    <button class="btn" onclick="generatePlan()">Generate My Meal Plan</button>
+  </main>
+
+  <main id="results" class="section" style="display:none;">
+    <h2>Your Personalized Meal Plan</h2>
+    <div id="meal-plan"></div>
+    <div class="alert" id="alert"></div>
+    <button class="btn" onclick="window.print()">Download / Print Meal Plan</button>
+    <button class="btn" onclick="editPreferences()">Edit My Preferences</button>
+  </main>
+
+  <script>
+    function validateLogin() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      if (email && password) {
+        document.getElementById("login").style.display = 'none';
+        document.getElementById("home").style.display = 'block';
+      } else {
+        document.getElementById("login-message").innerText = "Please enter both email and password.";
+      }
+    }
+
+    function goToPayment() {
+      document.getElementById("home").style.display = 'none';
+      document.getElementById("payment").style.display = 'block';
+    }
+
+    function completePayment() {
+      alert("Payment successful! You now have access to the meal plan quiz.");
+      document.getElementById("payment").style.display = 'none';
+      document.getElementById("quiz").style.display = 'block';
+    }
+
+    function editPreferences() {
+      document.getElementById("results").style.display = 'none';
+      document.getElementById("quiz").style.display = 'block';
+    }
+
+    function generatePlan() {
+      const condition = document.getElementById("condition").value;
+      const processed = document.getElementById("processed").value;
+
+      const plans = {
+        Diabetes: {
+          alert: "Note: Excess sugar can worsen diabetes. Here's a healthier alternative.",
+          breakfast: "Oatmeal with unsweetened almond milk",
+          lunch: "Grilled chicken with steamed vegetables",
+          dinner: "Quinoa with stir-fried greens"
+        },
+        Ulcers: {
+          alert: "Avoid acidic and spicy foods that may irritate ulcers.",
+          breakfast: "Banana and toast",
+          lunch: "Boiled potatoes and soft-cooked vegetables",
+          dinner: "Rice with bland soup"
+        },
+        "Kidney Disease": {
+          alert: "Limit high-protein and high-sodium foods for kidney health.",
+          breakfast: "Low-potassium fruit salad",
+          lunch: "White rice with green beans",
+          dinner: "Baked sweet potato"
+        },
+        Hypertension: {
+          alert: "Avoid high-sodium foods to manage blood pressure.",
+          breakfast: "Whole grain toast with avocado",
+          lunch: "Steamed fish with brown rice",
+          dinner: "Grilled vegetables with lentils"
+        },
+        HIV: {
+          alert: "Focus on nutrient-dense meals to boost immunity.",
+          breakfast: "Smoothie with spinach, banana, and peanut butter",
+          lunch: "Chicken stew with whole grain rice",
+          dinner: "Vegetable soup with bread"
+        }
+      };
+
+      const selectedPlan = plans[condition] || {
+        alert: "",
+        breakfast: "Basic meal plan",
+        lunch: "Balanced lunch",
+        dinner: "Healthy dinner"
+      };
+
+      const mealDiv = document.getElementById("meal-plan");
+      mealDiv.innerHTML = `
+        <div class="plan-box"><strong>Breakfast:</strong> ${selectedPlan.breakfast}</div>
+        <div class="plan-box"><strong>Mid-morning Snack:</strong> Fresh fruit or nuts</div>
+        <div class="plan-box"><strong>Lunch:</strong> ${selectedPlan.lunch}</div>
+        <div class="plan-box"><strong>Evening Snack:</strong> Yogurt or smoothie</div>
+        <div class="plan-box"><strong>Dinner:</strong> ${selectedPlan.dinner}</div>
+      `;
+      document.getElementById("alert").textContent = selectedPlan.alert;
+
+      document.getElementById("quiz").style.display = 'none';
+      document.getElementById("results").style.display = 'block';
+    }
+  
+    function completeSignup() {
+      const email = document.getElementById("signup-email").value;
+      const pass = document.getElementById("signup-password").value;
+      if (email && pass) {
+        document.getElementById("signup-message").innerText = "Signup successful! Please login now.";
+        setTimeout(() => {
+          document.getElementById("signup").style.display = 'none';
+          document.getElementById("login").style.display = 'block';
+        }, 1500);
+      } else {
+        document.getElementById("signup-message").style.color = "red";
+        document.getElementById("signup-message").innerText = "Fill in all fields.";
+      }
+    }
+
+    function submitBooking() {
+      const name = document.getElementById("book-name").value;
+      const time = document.getElementById("book-time").value;
+      if (name && time) {
+        document.getElementById("booking-message").innerText = "Booking received. We'll confirm via email.";
+      } else {
+        document.getElementById("booking-message").style.color = "red";
+        document.getElementById("booking-message").innerText = "Please fill in all fields.";
+      }
+    }
+
+    // Extra navigation for testing (optional)
+    document.addEventListener("DOMContentLoaded", () => {
+      const signupBtn = document.createElement("button");
+      signupBtn.innerText = "New here? Sign Up";
+      signupBtn.className = "btn";
+      signupBtn.onclick = () => {
+        document.getElementById("login").style.display = 'none';
+        document.getElementById("signup").style.display = 'block';
+      };
+      document.getElementById("login").appendChild(signupBtn);
+
+      const bookBtn = document.createElement("button");
+      bookBtn.innerText = "Book a Session";
+      bookBtn.className = "btn";
+      bookBtn.style.marginTop = "10px";
+      bookBtn.onclick = () => {
+        document.getElementById("results").style.display = 'none';
+        document.getElementById("booking").style.display = 'block';
+      };
+      document.getElementById("results").appendChild(bookBtn);
+    });
+  </script>
+
+</body>
+</html>
